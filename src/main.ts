@@ -1,4 +1,4 @@
-import { convertDistance, units } from "./utils2/convertDistance";
+import { convertDistance, units } from "./utils/convertDistance";
 
 export interface ISketch {
   context: CanvasRenderingContext2D;
