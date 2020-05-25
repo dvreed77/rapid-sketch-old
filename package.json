@@ -1,10 +1,10 @@
 {
-  "name": "m2",
+  "name": "gen-sketch",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/main.js",
   "bin": {
-    "dave-sketch": "./src/dave.js"
+    "gen-sketch": "./src/gen-sketch.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,6 +16,7 @@
     "@types/node": "^14.0.5",
     "@types/parcel-bundler": "^1.12.1",
     "canvas-sketch-util": "^1.10.0",
+    "express": "^4.17.1",
     "parcel-bundler": "^1.12.4"
   },
   "devDependencies": {
