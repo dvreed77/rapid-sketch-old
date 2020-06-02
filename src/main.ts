@@ -1,5 +1,8 @@
 import { convertDistance, units } from "./utils/convertDistance";
 
+export * from "./utils/convertDistance";
+export * from "./utils/defined";
+
 export interface ISketch {
   context: CanvasRenderingContext2D;
   width: number;
@@ -89,5 +92,40 @@ export function canvasSketch(
 
   const s = sketch();
 
-  s({ context, width, height });
+  const d = s({ context, width, height });
+
+  const handler = (ev) => {
+    // if (!opt.enabled()) return;
+
+    if (ev.keyCode === 83 && !ev.altKey && (ev.metaKey || ev.ctrlKey)) {
+      // Cmd + S
+      console.log("SAVE");
+      ev.preventDefault();
+      save(d);
+      // opt.save(ev);
+    }
+  };
+
+  window.addEventListener("keydown", handler);
+}
+
+function save(text) {
+  const blob = new Blob([text], { type: "image/svg+xml" });
+
+  const link = document.createElement("a");
+  link.style.visibility = "hidden";
+  link.target = "_blank";
+  link.download = "filename";
+  link.href = window.URL.createObjectURL(blob);
+  document.body.appendChild(link);
+  link.onclick = () => {
+    link.onclick = () => {};
+    setTimeout(() => {
+      // window.URL.revokeObjectURL(blob);
+      if (link.parentElement) link.parentElement.removeChild(link);
+      link.removeAttribute("href");
+      // resolve({ filename, client: false });
+    });
+  };
+  link.click();
 }
