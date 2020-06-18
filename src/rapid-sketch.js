@@ -7,7 +7,6 @@ const Bundler = require("parcel-bundler");
 const path = require("path");
 
 // mostly copied from here https://parceljs.org/api.html
-
 const myArgs = process.argv.slice(2);
 
 // Bundler options
@@ -37,6 +36,9 @@ const options = {
 (async function () {
   const app = express();
   app.use(express.static("dist"));
+
+  // also include assets at ./static relative to project directory
+  app.use("/static", express.static("./static"));
 
   const port = await getPort();
 
