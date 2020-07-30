@@ -1,4 +1,24 @@
 #!/usr/bin/env node
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,32 +55,47 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var openBrowser = require("open");
-var getPort = require("get-port");
-var express = require("express");
-var Bundler = require("parcel-bundler");
-var path = require("path");
-var multer = require("multer");
-var mime = require("mime-types");
-var dateformat = require("dateformat");
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+exports.__esModule = true;
+var open_1 = __importDefault(require("open"));
+var get_port_1 = __importDefault(require("get-port"));
+var express_1 = __importDefault(require("express"));
+var parcel_bundler_1 = __importDefault(require("parcel-bundler"));
+var path_1 = __importDefault(require("path"));
+var multer_1 = __importDefault(require("multer"));
+var mime_types_1 = __importDefault(require("mime-types"));
+var dateformat_1 = __importDefault(require("dateformat"));
+var commander_1 = require("commander");
+var fs = __importStar(require("fs"));
+var SAVE_DIR = "output";
+commander_1.program.version("0.0.1");
+commander_1.program
+    .arguments("<sketchFile>")
+    .option("-p, --port <port>", "server port")
+    .option("-o, --open", "open browser");
+commander_1.program.parse(process.argv);
+var sketchFilePath = commander_1.program.args[0];
 function getTimeStamp() {
     var dateFormatStr = "yyyy.mm.dd-HH.MM.ss";
-    return dateformat(new Date(), dateFormatStr);
+    return dateformat_1["default"](new Date(), dateFormatStr);
 }
-console.log("dave asdsa");
-var multipartUpload = multer({
-    storage: multer.diskStorage({
+if (!fs.existsSync(SAVE_DIR)) {
+    fs.mkdirSync(SAVE_DIR);
+}
+var multipartUpload = multer_1["default"]({
+    storage: multer_1["default"].diskStorage({
         destination: function (req, file, callback) {
-            callback(null, "./uploads");
+            callback(null, SAVE_DIR);
         },
         filename: function (req, file, callback) {
-            var ext = mime.extension(file.mimetype);
+            var ext = mime_types_1["default"].extension(file.mimetype);
             callback(null, file.originalname + "-" + getTimeStamp() + "." + ext);
         }
     })
 }).single("file");
 // mostly copied from here https://parceljs.org/api.html
-var myArgs = process.argv.slice(2);
 // Bundler options
 var options = {
     outDir: "./dist",
@@ -86,22 +121,27 @@ var options = {
 };
 (function () {
     return __awaiter(this, void 0, void 0, function () {
-        var app, port, bundler;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var app, port, _a, bundler;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    app = express();
-                    app.use(express.static("dist"));
-                    app.use("/favicon.ico", express.static(path.join(__dirname + "/images/favicon.ico")));
+                    app = express_1["default"]();
+                    app.use(express_1["default"].static("dist"));
+                    app.use("/favicon.ico", express_1["default"].static(path_1["default"].join(__dirname + "/images/favicon.ico")));
                     // also include assets at ./static relative to project directory
-                    app.use("/static", express.static("./static"));
-                    return [4 /*yield*/, getPort()];
+                    app.use("/static", express_1["default"].static("./static"));
+                    _a = commander_1.program.port;
+                    if (_a) return [3 /*break*/, 2];
+                    return [4 /*yield*/, get_port_1["default"]()];
                 case 1:
-                    port = _a.sent();
-                    bundler = new Bundler(myArgs[0], options);
+                    _a = (_b.sent());
+                    _b.label = 2;
+                case 2:
+                    port = _a;
+                    bundler = new parcel_bundler_1["default"](sketchFilePath, options);
                     app.use(bundler.middleware());
                     app.get("/", function (req, res) {
-                        res.sendFile(path.join(__dirname + "/index.html"));
+                        res.sendFile(path_1["default"].join(__dirname + "/index.html"));
                     });
                     app.post("/canvas-sketch-cli/saveBlob", multipartUpload, function (req, res) {
                         res.json({ msg: "DONE!" });
@@ -109,7 +149,8 @@ var options = {
                     app.listen(port, function () {
                         console.log("Example app listening at http://localhost:" + port);
                     });
-                    openBrowser("http://localhost:" + port);
+                    if (commander_1.program.open)
+                        open_1["default"]("http://localhost:" + port);
                     return [2 /*return*/];
             }
         });
