@@ -3,7 +3,7 @@
 import { defined } from "./defined";
 var units = ["mm", "cm", "m", "pc", "pt", "in", "ft", "px"];
 
-export type units = "mm" | "cm" | "m" | "pc" | "pt" | "in" | "ft" | "px";
+export type T_UNITS = "mm" | "cm" | "m" | "pc" | "pt" | "in" | "ft" | "px";
 
 const conversions = {
   // metric
@@ -56,8 +56,8 @@ function round(value: number, precision: number) {
 
 export function convertDistance(
   value: number,
-  fromUnit: units,
-  toUnit: units,
+  fromUnit: T_UNITS,
+  toUnit: T_UNITS,
   { pixelsPerInch = 96, precision, roundPixel = false }
 ) {
   if (typeof value !== "number" || !isFinite(value))
