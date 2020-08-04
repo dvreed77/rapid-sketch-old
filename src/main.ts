@@ -3,6 +3,8 @@ import { T_UNITS } from "./utils/convertDistance";
 import React from "react";
 import ReactDOM from "react-dom";
 
+import "./index.css";
+
 import { App } from "./App";
 
 // export * from "./utils/convertDistance";

@@ -79,6 +79,8 @@ const options = {
     express.static(path.join(__dirname + "/images/favicon.ico"))
   );
 
+  app.use("/index.css", express.static(path.join(__dirname + "/index.css")));
+
   // also include assets at ./static relative to project directory
   app.use("/static", express.static("./static"));
 
