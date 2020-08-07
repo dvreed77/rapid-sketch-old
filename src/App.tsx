@@ -13,6 +13,11 @@ export function App({ sketch, settings }: { sketch: any; settings: any }) {
   const [width, height] = settings.dimensions;
   const [isPlaying, setIsPlaying] = useState(false);
   const [frame, setFrame] = useState(0);
+  const [canvasProps, setCanvasProps] = useState({
+    context: null,
+    width: null,
+    height: null,
+  });
   document.title = `${settings.name} | RapidSketch`;
 
   function handleUserKeyPress(e) {
@@ -29,12 +34,18 @@ export function App({ sketch, settings }: { sketch: any; settings: any }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (canvasProps.context) {
+      const { context, width, height } = canvasProps;
+      render();
+    }
+  }, [canvasProps]);
+
   const requestRef = React.useRef(null);
 
-  const animate = (time) => {
-    // The 'state' will always be the initial value here
+  const animate = () => {
     if (isPlaying) {
-      console.log(time);
+      render();
       setFrame((frame) => frame + 1);
     }
     requestRef.current = requestAnimationFrame(animate);
@@ -43,12 +54,17 @@ export function App({ sketch, settings }: { sketch: any; settings: any }) {
   React.useEffect(() => {
     requestRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(requestRef.current);
-  }, [isPlaying]); // Make sure the effect runs only once
+  }, [isPlaying]);
+
+  function render() {
+    const { context, width, height } = canvasProps;
+    sketch()({ context, width, height });
+  }
 
   const d = 3;
   return (
     <div>
-      <Canvas width={width} height={height} sketch={sketch} />
+      <Canvas width={width} height={height} setCanvasProps={setCanvasProps} />
 
       <div className="mx-auto text-center mt-5">
         <span className="border rounded px-2 py-2 select-none">

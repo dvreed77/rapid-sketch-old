@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { convertDistance } from "./utils/convertDistance";
 
-export function Canvas({ width, height, sketch }) {
+export function Canvas({ width, height, setCanvasProps }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -50,9 +50,16 @@ export function Canvas({ width, height, sketch }) {
 
     const context = canvasRef.current.getContext("2d");
 
-    context.scale(scaleX, scaleY);
+    setCanvasProps({
+      context,
+      width: canvasWidth,
+      height: canvasHeight,
+    });
 
-    sketch()({ context, width, height });
+    // context.scale(scaleX, scaleY);
+
+    // render({ context, width, height });
+    // sketch()({ context, width, height });
   }, []);
 
   return <canvas ref={canvasRef}></canvas>;
