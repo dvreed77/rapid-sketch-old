@@ -68,7 +68,15 @@ export function App({ sketch, settings }: { sketch: any; settings: any }) {
 
       <div className="mx-auto text-center mt-5">
         <span className="border rounded px-2 py-2 select-none">
-          <span className="font-mono">Frame {frame}/100</span>
+          <span className="font-mono">
+            Frame{" "}
+            <span
+              style={{ minWidth: "5rem" }}
+              className="inline-block text-right"
+            >
+              {frame}/100
+            </span>
+          </span>
 
           <FontAwesomeIcon
             className="fill-current text-gray-500 hover:text-gray-600 cursor-pointer mx-1"
