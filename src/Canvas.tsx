@@ -51,6 +51,7 @@ export function Canvas({ width, height, setCanvasProps }) {
     const context = canvasRef.current.getContext("2d");
 
     setCanvasProps({
+      canvas: canvasRef.current,
       context,
       width: canvasWidth,
       height: canvasHeight,

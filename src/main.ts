@@ -23,6 +23,7 @@ export interface ISettings {
   units?: T_UNITS;
   pixelsPerInch?: number;
   name: string;
+  animation?: boolean;
 }
 
 export function canvasSketch(
