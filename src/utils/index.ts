@@ -19,31 +19,27 @@ export function createBlobFromDataURL(dataURL) {
   });
 }
 
-export function saveBlob(blob: Blob, name: string) {
-  console.log("name2", name);
+export async function saveBlob(blob: Blob, name: string) {
   const form = new window.FormData();
-  // form.append("dave", "cool");
   form.append("file", blob, name);
-  return window
-    .fetch("/canvas-sketch-cli/saveBlob", {
+  try {
+    const res = await window.fetch("/canvas-sketch-cli/saveBlob", {
       method: "POST",
       cache: "no-cache",
       credentials: "same-origin",
       body: form,
-    })
-    .then((res) => {
-      if (res.status === 200) {
-        return res.json();
-      } else {
-        return res.text().then((text) => {
-          throw new Error(text);
-        });
-      }
-    })
-    .catch((err) => {
-      // Some issue, just bail out and return nil hash
-      // console.warn(`There was a problem exporting ${opts.filename}`);
-      console.error(err);
-      return undefined;
     });
+    if (res.status === 200) {
+      return res.json();
+    } else {
+      return res.text().then((text) => {
+        throw new Error(text);
+      });
+    }
+  } catch (err) {
+    // Some issue, just bail out and return nil hash
+    // console.warn(`There was a problem exporting ${opts.filename}`);
+    console.error(err);
+    return undefined;
+  }
 }
