@@ -10,6 +10,7 @@ import {
 import "./index.css";
 import { createBlobFromDataURL, saveBlob } from "./utils";
 import { ISettings } from "./main";
+import mime from "mime-types";
 
 export function App({
   sketch,
@@ -38,6 +39,25 @@ export function App({
       createBlobFromDataURL(dataURL).then((blob: any) => {
         saveBlob(blob, settings.name);
       });
+    } else if (e.code === "KeyP" && !e.altKey && e.metaKey) {
+      e.preventDefault();
+
+      const { context, width, height } = canvasProps;
+      const r = sketch()({ context, width, height });
+
+      console.log("asdas");
+
+      r.forEach(({ data, extension }) => {
+        const blob = new Blob([data], {
+          type: mime.lookup(extension) as string,
+        });
+        saveBlob(blob, settings.name);
+      });
+
+      // const dataURL = canvasProps.canvas.toDataURL();
+      // createBlobFromDataURL(dataURL).then((blob: any) => {
+      //   saveBlob(blob, settings.name);
+      // });
     }
   }
 

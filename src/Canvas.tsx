@@ -35,8 +35,8 @@ export function Canvas({ width, height, setCanvasProps }) {
     }
 
     // Calculate Canvas Width
-    let canvasWidth = Math.round(2 * realWidth);
-    let canvasHeight = Math.round(2 * realHeight);
+    let canvasWidth = Math.round(1 * realWidth);
+    let canvasHeight = Math.round(1 * realHeight);
 
     // Calculate Scale
     const scaleX = canvasWidth / width;
