@@ -43,6 +43,8 @@ export function App({
       e.preventDefault();
 
       const { context, width, height } = canvasProps;
+
+      // TODO: better name than r
       const r = sketch()({ context, width, height });
 
       console.log("asdas");
