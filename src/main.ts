@@ -16,6 +16,7 @@ export interface ISketch {
   height: number;
   units: T_UNITS;
   deltaTime: number;
+  frame: number;
 }
 
 export interface ISettings {
@@ -24,6 +25,7 @@ export interface ISettings {
   pixelsPerInch?: number;
   name: string;
   animation?: boolean;
+  totalFrames?: number;
 }
 
 export function canvasSketch(
