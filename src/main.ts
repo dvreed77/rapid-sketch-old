@@ -2,8 +2,7 @@ import { SketchManager } from "./SketchManager";
 import { T_UNITS } from "./utils/convertDistance";
 import React from "react";
 import ReactDOM from "react-dom";
-
-import "./index.css";
+import "antd/dist/antd.css";
 
 import { App } from "./App";
 
@@ -16,6 +15,7 @@ export interface ISketch {
   height: number;
   units: T_UNITS;
   deltaTime: number;
+  frame: number;
 }
 
 export interface ISettings {
@@ -24,6 +24,7 @@ export interface ISettings {
   pixelsPerInch?: number;
   name: string;
   animation?: boolean;
+  totalFrames?: number;
 }
 
 export function canvasSketch(

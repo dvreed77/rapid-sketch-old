@@ -4,7 +4,9 @@
     "outDir": "dist",
     "declaration": true,
     "lib": ["ES2015", "DOM"],
-    "jsx": "react"
+    "jsx": "react",
+    "sourceMap": true,
+    "downlevelIteration": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "src/examples/**/*"]

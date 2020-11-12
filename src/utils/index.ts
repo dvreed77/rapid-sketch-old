@@ -1,4 +1,4 @@
-export function createBlobFromDataURL(dataURL) {
+export function createBlobFromDataURL(dataURL): Promise<Blob> {
   return new Promise((resolve) => {
     const splitIndex = dataURL.indexOf(",");
     if (splitIndex === -1) {
@@ -42,4 +42,70 @@ export async function saveBlob(blob: Blob, name: string) {
     console.error(err);
     return undefined;
   }
+}
+
+export async function saveBlob2(blob: Blob, name: string) {
+  const form = new window.FormData();
+  form.append("file", blob, name);
+  try {
+    const res = await window.fetch("/saveStream", {
+      method: "POST",
+      cache: "no-cache",
+      credentials: "same-origin",
+      body: form,
+    });
+    if (res.status === 200) {
+      return res.json();
+    } else {
+      return res.text().then((text) => {
+        throw new Error(text);
+      });
+    }
+  } catch (err) {
+    // Some issue, just bail out and return nil hash
+    // console.warn(`There was a problem exporting ${opts.filename}`);
+    console.error(err);
+    return undefined;
+  }
+}
+
+export async function saveBlob3(blob: Blob, name: string) {
+  const form = new window.FormData();
+  form.append("file", blob, name);
+  try {
+    const res = await window.fetch("/sendStreamBlob", {
+      method: "POST",
+      cache: "no-cache",
+      credentials: "same-origin",
+      body: form,
+    });
+    if (res.status === 200) {
+      return res.json();
+    } else {
+      return res.text().then((text) => {
+        throw new Error(text);
+      });
+    }
+  } catch (err) {
+    // Some issue, just bail out and return nil hash
+    // console.warn(`There was a problem exporting ${opts.filename}`);
+    console.error(err);
+    return undefined;
+  }
+}
+
+export async function startStream() {
+  const res = await window.fetch("/startStreaming", {
+    method: "POST",
+    cache: "no-cache",
+    credentials: "same-origin",
+  });
+}
+
+export async function endStream() {
+  const res = await window.fetch("/endStreaming", {
+    method: "POST",
+    cache: "no-cache",
+    credentials: "same-origin",
+  });
 }
