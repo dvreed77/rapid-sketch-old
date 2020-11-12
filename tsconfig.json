@@ -5,7 +5,8 @@
     "declaration": true,
     "lib": ["ES2015", "DOM"],
     "jsx": "react",
-    "sourceMap": true
+    "sourceMap": true,
+    "downlevelIteration": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "src/examples/**/*"]

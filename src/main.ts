@@ -2,8 +2,7 @@ import { SketchManager } from "./SketchManager";
 import { T_UNITS } from "./utils/convertDistance";
 import React from "react";
 import ReactDOM from "react-dom";
-
-import "./index.css";
+import "antd/dist/antd.css";
 
 import { App } from "./App";
 

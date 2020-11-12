@@ -3,3 +3,5 @@ dist/
 .cache/
 
 example/output/
+
+.DS_Store

@@ -1,25 +1,37 @@
 import { canvasSketch, ISettings } from "rapid-sketch";
 
 const settings: ISettings = {
-  dimensions: [800, 800],
+  dimensions: [2000, 2000],
   name: "sketch2",
   animation: true,
-  totalFrames: 200,
+  totalFrames: 90,
 };
 
 canvasSketch(() => {
-  return ({ context, width, height, deltaTime, frame, ...args }) => {
-    context.fillStyle = "white";
+  return ({ context, width, height, frame }) => {
+    const playhead = frame / 90;
+    // Fill the canvas with pink
+    context.fillStyle = "pink";
     context.fillRect(0, 0, width, height);
-    context.beginPath();
 
-    const x = (frame / 200) * width;
-    const y = height / 2;
+    // Get a seamless 0..1 value for our loop
+    const t = Math.sin(playhead * Math.PI);
 
-    context.moveTo(x + 10, y);
-    context.arc(x, y, 10, 0, 2 * Math.PI);
+    // Animate the thickness with 'playhead' prop
+    const thickness = Math.max(5, Math.pow(t, 0.55) * width * 0.5);
 
-    context.lineWidth = 2;
-    context.stroke();
+    // Rotate with PI to create a seamless animation
+    const rotation = playhead * Math.PI;
+
+    // Draw a rotating white rectangle around the center
+    const cx = width / 2;
+    const cy = height / 2;
+    const length = height * 0.5;
+    context.fillStyle = "white";
+    context.save();
+    context.translate(cx, cy);
+    context.rotate(rotation);
+    context.fillRect(-thickness / 2, -length / 2, thickness, length);
+    context.restore();
   };
 }, settings);

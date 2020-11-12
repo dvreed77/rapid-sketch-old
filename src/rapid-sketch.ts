@@ -11,6 +11,8 @@ import dateformat from "dateformat";
 import { program } from "commander";
 import * as fs from "fs";
 import ParcelBundler from "parcel-bundler";
+import { createStream } from "./ffmpeg/createStream";
+import { bufferToStream } from "./utils/bufferToStream";
 
 const SAVE_DIR = "output";
 
@@ -41,6 +43,18 @@ var multipartUpload = multer({
     filename: function (req, file, callback) {
       const ext = mime.extension(file.mimetype);
       callback(null, `${file.originalname}-${getTimeStamp()}.${ext}`);
+    },
+  }),
+}).single("file");
+
+var fileSave = multer({
+  storage: multer.diskStorage({
+    destination: function (req, file, callback) {
+      callback(null, SAVE_DIR);
+    },
+    filename: function (req, file, callback) {
+      const ext = mime.extension(file.mimetype);
+      callback(null, `${file.originalname}.${ext}`);
     },
   }),
 }).single("file");
@@ -90,12 +104,43 @@ const options = {
 
   app.use(bundler.middleware());
 
+  let currentStream;
+
   app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname + "/index.html"));
   });
 
   app.post("/canvas-sketch-cli/saveBlob", multipartUpload, (req, res) => {
     res.json({ msg: "DONE!" });
+  });
+
+  app.post("/saveStream", fileSave, (req, res) => {
+    res.json({ msg: "DONE!" });
+  });
+
+  app.post(
+    "/sendStreamBlob",
+    multer({ storage: multer.memoryStorage() }).single("file"),
+    (req, res) => {
+      const readStream = bufferToStream(req.file.buffer);
+      currentStream.writeFrame(readStream);
+      res.json({ msg: "DONE!" });
+    }
+  );
+
+  app.post("/endStreaming", (req, res) => {
+    let p = Promise.resolve();
+    if (currentStream) {
+      p = currentStream.end();
+    }
+    res.json({ msg: "ending streaming" });
+  });
+
+  app.post("/startStreaming", (req, res) => {
+    currentStream = createStream({
+      output: `output/${"movie"}-${getTimeStamp()}.${"mp4"}`,
+    });
+    res.json({ msg: "started streaming" });
   });
 
   app.listen(port, () => {
