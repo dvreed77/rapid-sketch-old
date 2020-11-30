@@ -76,7 +76,7 @@ export function App({
     return () => {
       window.removeEventListener("keydown", handleUserKeyPress);
     };
-  });
+  }, []);
 
   useEffect(() => {
     function handleUserKeyPress(e: KeyboardEvent) {
@@ -100,6 +100,8 @@ export function App({
           });
           saveBlob(blob, settings.name);
         });
+      } else if (e.code === "KeyR") {
+        render();
       }
     }
 
